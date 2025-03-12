@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <curl/curl.h>
 
+//buffer for the api calls
+struct Memory{
+  char *response;
+  size_t size;
+}
+
 int main(void){
   CURL *curl;
   CURLcode result;
