@@ -6,11 +6,17 @@
 struct Memory{
   char *response;
   size_t size;
-}
+};
 
 int main(void){
   CURL *curl;
   CURLcode result;
+
+  const char *API_KEY = getenv("API_KEY_RTB");
+  if(API_KEY == NULL){
+    fprintf(stderr, "API key not set\n");
+    return -1;
+  }
   
   //the HTTP request
   curl = curl_easy_init();
@@ -19,13 +25,17 @@ int main(void){
     return -1;
   }
 
+  //append the api key
+  char url[512];
+  snprintf(url, sizeof(url), "https://mobility-api.mobility-database.fintraffic.fi/gtfs-realtime/v2/TripUpdates?apikey=%s", API_KEY);
+
   //set options for the HTTP request
-  curl_easy_setopt(curl, CURLOPT_URL, "https://mobility-api.mobility-database.fintraffic.fi/gtfs-realtime/v2/TripUpdates?apikey=YOUR_API_KEY");
+  curl_easy_setopt(curl, CURLOPT_URL, url);
 
   //actually does the request
   result = curl_easy_perform(curl);
   if(result != CURLE_OK){
-    fprintf(sderr, "ERROR: %s\n", curl_easy_strerror(result));
+    fprintf(stderr, "ERROR: %s\n", curl_easy_strerror(result));
     return -1;
   }
 
