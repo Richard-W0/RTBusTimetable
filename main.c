@@ -4,7 +4,13 @@
 
 int main(void){
   CURL *curl;
-  CURLcode res;
+  CURLcode result;
   
-  printf("lorem ipsum etc");
+  curl = curl_easy_init();
+  if(curl == NULL){
+    fprintf(stderr, "HTTP request failed\n")
+    return -1;
+  }
+
+  return 0;
 }
