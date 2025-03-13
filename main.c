@@ -27,10 +27,21 @@ int main(void){
 
   //append the api key
   char url[512];
-  snprintf(url, sizeof(url), "https://mobility-api.mobility-database.fintraffic.fi/gtfs-realtime/v2/TripUpdates?apikey=%s", API_KEY);
+  snprintf(url, sizeof(url), "https://mobility-api.mobility-database.fintraffic.fi/gtfs-realtime/v2?route_id=329009");
+
+  char apiKey[512];
+  snprintf(apiKey, sizeof(apiKey), "x-api-key: %s", API_KEY);
+
+  // Create a linked list of headers
+  struct curl_slist *headers = NULL;
+  headers = curl_slist_append(headers, "accept: application/octet-stream");
+  headers = curl_slist_append(headers, apiKey);
+
 
   //set options for the HTTP request
   curl_easy_setopt(curl, CURLOPT_URL, url);
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);  
+  curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
   //actually does the request
   result = curl_easy_perform(curl);
@@ -44,5 +55,6 @@ int main(void){
 
   //closes the easy api session
   curl_easy_cleanup(curl);
+  curl_slist_free_all(headers);
   return 0;
 }
